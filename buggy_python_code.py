@@ -2,12 +2,13 @@ import sys
 import os
 import yaml
 import flask
+from typing import Dict, Any, Optional, Union
 
 app = flask.Flask(__name__)
 
 
 @app.route("/")
-def index():
+def index() -> Optional[str]:
     version = flask.request.args.get("urllib_version")
     url = flask.request.args.get("url")
     return fetch_website(version, url)
@@ -21,29 +22,29 @@ class Person(object):
         self.name = name
 
 
-def print_nametag(format_string, person):
+def print_nametag(format_string: str, person: Person) -> None:
     print(format_string.format(person=person))
 
 
-def fetch_website(urllib_version, url):
+def fetch_website(urllib_version: Optional[str], url: str) -> None:
     # Import the requested version (2 or 3) of urllib
     exec(f"import urllib{urllib_version} as urllib", globals())
     # Fetch and print the requested URL
 
     try:
         http = urllib.PoolManager()
-        r = http.request('GET', url)
+        http.request('GET', url)
     except:
         print('Exception')
 
 
-def load_yaml(filename):
+def load_yaml(filename: str) -> Any:
     stream = open(filename)
     deserialized_data = yaml.load(stream, Loader=yaml.Loader)  # deserializing data
     return deserialized_data
 
 
-def authenticate(password):
+def authenticate(password: str) -> None:
     # Assert that the password is correct
     assert password == "Iloveyou", "Invalid password!"
     print("Successfully authenticated!")
